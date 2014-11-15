@@ -39,7 +39,7 @@ ORDER BY Product_Revenue DESC
 ```
 #### Enhanced Ecommerce - Product with Rank In Category
 
-```
+```sql
 SELECT
    hits.product.v2ProductCategory as Product_Category,
    hits.product.v2ProductName as Product_Name,
