@@ -1,5 +1,23 @@
 ## Classic Ecommerce
 
+#### Users that purchased product A also purchased
+
+```sql
+SELECT hits.item.productName AS other_purchased_products, COUNT(hits.item.productName) AS quantity
+FROM [6191731.ga_sessions_20140601]
+WHERE fullVisitorId IN (
+  SELECT fullVisitorId
+  FROM [6191731.ga_sessions_20140601]
+  WHERE hits.item.productName = 'PRODUCT A'
+   AND totals.transactions>=1
+  GROUP BY fullVisitorId )
+ AND hits.item.productName IS NOT NULL
+ AND hits.item.productName !='PRODUCT A'
+GROUP BY other_purchased_products
+ORDER BY quantity DESC;
+```
+
+
 #### What is the average number of user interactions before a purchase?
 
 ```sql
