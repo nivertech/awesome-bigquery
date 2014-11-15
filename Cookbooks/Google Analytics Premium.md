@@ -107,4 +107,16 @@ FROM (
   ))
 ```
 
+#### Enhanced Ecommerce
 
+To-do - Top New Products (Not Available Previous Month)
+
+```sql
+SELECT hits.item.productName AS prod_name, 
+count(*) AS transactions
+FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], 
+	TIMESTAMP('2014-06-01'), 
+                       TIMESTAMP('2014-06-14'))) 
+WHERE hits.item.productName IS NOT NULL
+GROUP BY prod_name ORDER BY transactions DESC;
+```
