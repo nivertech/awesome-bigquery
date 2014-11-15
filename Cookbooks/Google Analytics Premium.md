@@ -1,3 +1,26 @@
+## Classic Ecommerce
+
+#### What is the average number of user interactions before a purchase?
+
+```sql
+SELECT one.hits.item.productName AS product_name, product_revenue, ( sum_of_hit_number / total_hits ) AS avg_hit_number
+FROM (
+  SELECT hits.item.productName, SUM(hits.hitNumber) AS sum_of_hit_number, SUM( hits.item.itemRevenue ) AS product_revenue
+  FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], TIMESTAMP('2014-06-01'), TIMESTAMP('2014-06-14'))) 
+  WHERE hits.item.productName IS NOT NULL
+    AND totals.transactions>=1
+  GROUP BY hits.item.productName
+  ORDER BY sum_of_hit_number DESC ) as one
+JOIN (
+  SELECT hits.item.productName, COUNT( fullVisitorId ) AS total_hits
+  FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], TIMESTAMP('2014-06-01'), TIMESTAMP('2014-06-14'))) 
+  WHERE hits.item.productName IS NOT NULL
+    AND totals.transactions>=1
+  GROUP BY hits.item.productName ) as two
+ON one.hits.item.productName = two.hits.item.productName
+ORDER BY product_revenue DESC
+```
+
 ## Enhanced Ecommerce Notes
 
 The hits.type values 'ITEM' and 'TRANSACTION' are no longer used as the new tagging must send the data with the hits.type 'PAGE' or 'EVENT'.
