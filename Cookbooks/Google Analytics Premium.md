@@ -22,3 +22,18 @@ WHERE hits.product.v2ProductName IS NOT NULL
   AND hits_eCommerceAction_action_type = '6'
   AND hits.page.pagePath CONTAINS 'confirmation'
 ```
+
+#### Enhanced Ecommerce - Products - Revenue, Uniq & Qty
+
+```sql
+SELECT 
+  hits.product.v2ProductName as Product_Name,
+  (sum( hits.product.productRevenue ) * 0.000001) as Product_Revenue,
+  count(hits.product.v2ProductName) as Unique_Purchases,
+  sum( hits.product.productQuantity ) as Quantity
+FROM [6191731.ga_sessions_20141101]
+WHERE hits.product.v2ProductName IS NOT NULL 
+  AND hits.eCommerceAction.action_type = '6'
+GROUP BY Product_Name
+ORDER BY Product_Revenue DESC
+```
