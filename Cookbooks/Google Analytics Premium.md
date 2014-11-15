@@ -37,3 +37,18 @@ WHERE hits.product.v2ProductName IS NOT NULL
 GROUP BY Product_Name
 ORDER BY Product_Revenue DESC
 ```
+#### Enhanced Ecommerce - Product with Rank In Category
+
+```
+SELECT
+   hits.product.v2ProductCategory as Product_Category,
+   hits.product.v2ProductName as Product_Name,
+   (sum( hits.product.productRevenue ) * 0.000001) as Product_Revenue,
+   RANK() OVER (PARTITION BY Product_Category ORDER BY Product_Revenue DESC) Category_Rank,
+FROM
+   [6191731.ga_sessions_20141101]
+WHERE hits.product.v2ProductName IS NOT NULL 
+  AND hits.eCommerceAction.action_type = '6'
+GROUP BY Product_Category, Product_Name
+ORDER BY Product_Revenue DESC
+```
