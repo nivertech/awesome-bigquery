@@ -52,3 +52,24 @@ WHERE hits.product.v2ProductName IS NOT NULL
 GROUP BY Product_Category, Product_Name
 ORDER BY Product_Revenue DESC
 ```
+
+#### Enhanced Ecommerce - Top 5 Products Per Category
+
+```sql
+SELECT Product_Category, Product_Name, Product_Revenue, Category_Rank FROM (
+  SELECT
+     hits.product.v2ProductCategory as Product_Category,
+     hits.product.v2ProductName as Product_Name,
+     (sum( hits.product.productRevenue ) * 0.000001) as Product_Revenue,
+     RANK() OVER (PARTITION BY Product_Category ORDER BY Product_Revenue DESC) Category_Rank,
+  FROM
+     [6191731.ga_sessions_20141101]
+  WHERE hits.product.v2ProductName IS NOT NULL 
+    AND hits.eCommerceAction.action_type = '6'
+  GROUP BY Product_Category, Product_Name
+  ORDER BY Product_Revenue DESC
+)
+WHERE Category_Rank < 6
+ORDER BY Product_Category, Category_Rank ASC
+
+```
