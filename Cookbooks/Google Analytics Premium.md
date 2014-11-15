@@ -73,3 +73,9 @@ WHERE Category_Rank < 6
 ORDER BY Product_Category, Category_Rank ASC
 
 ```
+
+#### Enhanced Ecommerce - Top 5 Products Per Category with Overall Rank
+
+Todo - same as 'Enhanced Ecommerce - Top 5 Products Per Category' but join with overall rank.
+
+
