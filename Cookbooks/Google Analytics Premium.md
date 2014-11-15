@@ -78,4 +78,33 @@ ORDER BY Product_Category, Category_Rank ASC
 
 Todo - same as 'Enhanced Ecommerce - Top 5 Products Per Category' but join with overall rank.
 
+#### Enhanced Ecommerce - Products Bring In 80% Of Revenue
+
+Todo - change example below to work with GA data
+
+```sql
+SELECT 
+  word, 
+  ratio_running,
+  IF(ratio_running < 0.8, 'TRUE', 'FALSE') as top_80_percent
+FROM (
+SELECT 
+  word, 
+  word_count, 
+  word_count_running, 
+  ratio, 
+  SUM(ratio) OVER(ORDER BY ratio DESC, word) AS ratio_running, 
+  (word_count / ratio) as total
+FROM (
+  SELECT 
+     word, 
+     word_count, 
+     SUM(word_count) OVER(ORDER BY word_count DESC, word) AS word_count_running, 
+     RATIO_TO_REPORT(word_count) OVER() AS ratio
+  FROM [publicdata:samples.shakespeare]
+  WHERE corpus  = 'hamlet'
+  AND word > 'a' LIMIT 30
+  ))
+```
+
 
