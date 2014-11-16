@@ -2,7 +2,7 @@
 
 #### All Full Visitor IDs that purchased one of top 10 products
 
-```
+```sql
 SELECT fullVisitorId, hits.item.productName
   FROM (FLATTEN([6191731.ga_sessions_20140601], hits.item))
   WHERE hits.item.productName IN (
