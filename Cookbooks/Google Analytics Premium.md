@@ -1,5 +1,26 @@
 ## Classic Ecommerce
 
+#### Top 5 Products Launched In Certain Month
+
+todo- can this be done without the join using WINDOW function? 
+Also do we need date and just have the MIN date and build queries on that? << this will work if we are just looking at latest month not pevious month but you can limite the daterange to end of that month
+
+```sql
+SELECT a.date_month, b.first_month, a.product_name, a.qty
+FROM (
+  SELECT MONTH(date) as date_month, hits.item.productName as product_name, COUNT(hits.item.productName) as qty
+  FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], TIMESTAMP('2014-04-01'), TIMESTAMP('2014-09-30'))) 
+  GROUP BY product_name, date_month ) as a
+JOIN (
+  SELECT MIN(MONTH(date)) as first_month, hits.item.productName as product_name
+  FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], TIMESTAMP('2014-04-01'), TIMESTAMP('2014-09-30'))) 
+  GROUP BY product_name ) as b
+ON a.product_name = b.product_name
+WHERE b.first_month = 9
+ORDER BY a.qty DESC
+LIMIT 5
+```
+
 #### All Full Visitor IDs that purchased one of top 10 products
 
 ```sql
