@@ -1,5 +1,23 @@
 ## Classic Ecommerce
 
+#### All Full Visitor IDs that purchased one of top 10 products
+
+```
+SELECT fullVisitorId, hits.item.productName
+  FROM (FLATTEN([6191731.ga_sessions_20140601], hits.item))
+  WHERE hits.item.productName IN (
+    SELECT hits.item.productName FROM (
+    SELECT hits.item.productName, sum( hits.item.itemRevenue ) as total
+    FROM (FLATTEN([6191731.ga_sessions_20140601], hits.item))
+    WHERE hits.item.productName IS NOT NULL
+    GROUP BY hits.item.productName
+    order by total DESC
+    LIMIT 10
+  ))
+   AND totals.transactions>=1
+  GROUP BY fullVisitorId, hits.item.productName
+```
+
 #### Users that purchased product A also purchased
 
 ```sql
