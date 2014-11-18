@@ -1,3 +1,34 @@
+## GA + CRM data
+
+#### Join Traffic Source, Landing Page and Customer Type using Order ID
+
+One of the issues with the BigQuery export is that you do not get the landing page as a traffic source so you need to do a JOIN using fullVisitorId and VisitId. This is time consuming but is the only way to get landing page next to transaction ID.
+You can then join CRM data based on the transaction ID.
+
+```sql
+SELECT c.mdm, c.landpg, c.trid, d.custtype
+FROM 
+  (SELECT 
+  a.user_session_id as uid,
+  a.hit as hit,
+  a.transaction_id as trid,
+  b.medium as mdm,
+  b.hit_number as hitnum,
+  b.landing_page as landpg
+FROM 
+  (SELECT STRING(fullVisitorId) + '-' + STRING(visitId) as user_session_id, hits.hitNumber as hit, hits.transaction.transactionId AS transaction_id 
+  FROM FLATTEN([6191731.ga_sessions_20141110], hits.transaction.transactionId)) AS a
+JOIN EACH
+  (SELECT STRING(fullVisitorId) + '-' + STRING(visitId) as user_session_id, trafficSource.medium AS medium, hits.page.pagePath AS landing_page, hits.hitNumber AS hit_number 
+  FROM FLATTEN([6191731.ga_sessions_20141110],hits.hitNumber) WHERE hits.hitNumber = 1)  AS b
+ON a.user_session_id = b.user_session_id ) as c
+JOIN EACH 
+  (SELECT OrderID as ordid, customerType as custtype 
+  FROM [Customer_Type.Data] ) AS d
+ON c.trid = d.ordid
+```
+
+
 ## Classic Ecommerce
 
 #### Top 5 Products Launched In Certain Month
