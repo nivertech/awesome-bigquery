@@ -223,11 +223,17 @@ FROM (
 To-do - Top New Products (Not Available Previous Month)
 
 ```sql
-SELECT hits.item.productName AS prod_name, 
-count(*) AS transactions
-FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], 
-	TIMESTAMP('2014-06-01'), 
-                       TIMESTAMP('2014-06-14'))) 
-WHERE hits.item.productName IS NOT NULL
-GROUP BY prod_name ORDER BY transactions DESC;
+SELECT a.date_month, b.first_month, a.product_name, a.qty
+FROM (
+  SELECT MONTH(date) as date_month, hits.item.productName as product_name, COUNT(hits.item.productName) as qty
+  FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], TIMESTAMP('2014-04-01'), TIMESTAMP('2014-09-30'))) 
+  GROUP BY product_name, date_month ) as a
+JOIN (
+  SELECT MIN(MONTH(date)) as first_month, hits.item.productName as product_name
+  FROM (TABLE_DATE_RANGE([6191731.ga_sessions_], TIMESTAMP('2014-04-01'), TIMESTAMP('2014-09-30'))) 
+  GROUP BY product_name ) as b
+ON a.product_name = b.product_name
+WHERE b.first_month = 9
+ORDER BY a.qty DESC
+LIMIT 5;
 ```
