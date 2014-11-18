@@ -15,6 +15,22 @@ GROUP BY unique_visit_id, hit, page
 ORDER BY unique_visit_id, hit)
 ```
 
+#### Pageviews, Exits and Exit Rate
+
+```sql
+SELECT 
+  page,
+  COUNT(page) as pageviews,
+  SUM(IF(hit = max_hit, 1, 0)) as exits,
+  (SUM(IF(hit = max_hit, 1, 0))/COUNT(page)) * 100 AS exit_rate
+FROM (SELECT CONCAT(fullVisitorId, STRING(visitId)) AS unique_visit_id, hits.hitNumber AS hit, hits.page.pagePath AS page, MAX(hit) OVER (PARTITION BY unique_visit_id) AS max_hit
+FROM [google.com:analytics-bigquery:LondonCycleHelmet.ga_sessions_20130910]
+GROUP BY unique_visit_id, hit, page
+ORDER BY unique_visit_id, hit)
+GROUP BY page
+ORDER BY pageviews DESC
+```
+
 ## GA + CRM data
 
 #### Join Traffic Source, Landing Page and Customer Type using Order ID
