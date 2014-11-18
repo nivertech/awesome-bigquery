@@ -6,13 +6,15 @@
 SELECT 
   unique_visit_id,
   page,
-  hit,
+  hit_number,
+  hit_type,
   max_hit,
-  IF(hit = max_hit, 'yes', 'no') as last_page
-FROM (SELECT CONCAT(fullVisitorId, STRING(visitId)) AS unique_visit_id, hits.hitNumber AS hit, hits.page.pagePath AS page, MAX(hit) OVER (PARTITION BY unique_visit_id) AS max_hit
+  IF(hit_number = max_hit, 'yes', 'no') as last_page
+FROM (SELECT CONCAT(fullVisitorId, STRING(visitId)) AS unique_visit_id, hits.hitNumber AS hit_number, hits.type AS hit_type, hits.page.pagePath AS page, MAX(hit_number) OVER (PARTITION BY unique_visit_id) AS max_hit
 FROM [google.com:analytics-bigquery:LondonCycleHelmet.ga_sessions_20130910]
-GROUP BY unique_visit_id, hit, page
-ORDER BY unique_visit_id, hit)
+WHERE hits.type = 'PAGE'
+GROUP BY unique_visit_id, hit_number, hit_type, page
+ORDER BY unique_visit_id, hit_number)
 ```
 
 #### Pageviews, Exits and Exit Rate
@@ -21,12 +23,13 @@ ORDER BY unique_visit_id, hit)
 SELECT 
   page,
   COUNT(page) as pageviews,
-  SUM(IF(hit = max_hit, 1, 0)) as exits,
-  (SUM(IF(hit = max_hit, 1, 0))/COUNT(page)) * 100 AS exit_rate
-FROM (SELECT CONCAT(fullVisitorId, STRING(visitId)) AS unique_visit_id, hits.hitNumber AS hit, hits.page.pagePath AS page, MAX(hit) OVER (PARTITION BY unique_visit_id) AS max_hit
+  SUM(IF(hit_number = max_hit, 1, 0)) as exits,
+  (SUM(IF(hit_number = max_hit, 1, 0))/COUNT(page)) * 100 AS exit_rate
+FROM (SELECT CONCAT(fullVisitorId, STRING(visitId)) AS unique_visit_id, hits.hitNumber AS hit_number, hits.type AS hit_type, hits.page.pagePath AS page, MAX(hit_number) OVER (PARTITION BY unique_visit_id) AS max_hit
 FROM [google.com:analytics-bigquery:LondonCycleHelmet.ga_sessions_20130910]
-GROUP BY unique_visit_id, hit, page
-ORDER BY unique_visit_id, hit)
+WHERE hits.type = 'PAGE'
+GROUP BY unique_visit_id, hit_number, hit_type, page
+ORDER BY unique_visit_id, hit_number)
 GROUP BY page
 ORDER BY pageviews DESC
 ```
