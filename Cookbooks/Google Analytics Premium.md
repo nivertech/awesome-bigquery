@@ -1,3 +1,20 @@
+## Behaviour
+
+#### Add Column To State If Page Is Last Hit
+
+```sql
+SELECT 
+  unique_visit_id,
+  page,
+  hit,
+  max_hit,
+  IF(hit = max_hit, 'yes', 'no') as last_page
+FROM (SELECT CONCAT(fullVisitorId, STRING(visitId)) AS unique_visit_id, hits.hitNumber AS hit, hits.page.pagePath AS page, MAX(hit) OVER (PARTITION BY unique_visit_id) AS max_hit
+FROM [google.com:analytics-bigquery:LondonCycleHelmet.ga_sessions_20130910]
+GROUP BY unique_visit_id, hit, page
+ORDER BY unique_visit_id, hit)
+```
+
 ## GA + CRM data
 
 #### Join Traffic Source, Landing Page and Customer Type using Order ID
