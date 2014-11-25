@@ -1,6 +1,8 @@
 Awesome BigQuery
 ================
 
+A curated list of all the awesome articles, tutorials and video avaiable online for Google BigQuery. Part of the [awesome awesomeness](https://github.com/bayandin/awesome-awesomeness) collections.
+
 ### Introduction
 
 - [What is BigQuery? by Felipe Hoffa (video)](https://www.youtube.com/watch?v=aupC-Wj7XDY)
