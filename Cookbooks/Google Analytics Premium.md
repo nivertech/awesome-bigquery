@@ -7,7 +7,10 @@ SELECT
 trafficSource.source + ' / ' + trafficSource.medium AS source_medium, 
 count(DISTINCT CONCAT(fullVisitorId, STRING(visitId)), 100000) as sessions,
 SUM(totals.bounces) as bounces,
-100 * SUM(totals.bounces) / count(DISTINCT CONCAT(fullVisitorId, STRING(visitId)), 100000) as bounce_rate
+100 * SUM(totals.bounces) / count(DISTINCT CONCAT(fullVisitorId, STRING(visitId)), 100000) as bounce_rate,
+SUM(totals.transactions) as transactions,
+100 * SUM(totals.transactions) / count(DISTINCT CONCAT(fullVisitorId, STRING(visitId)), 100000) as conversion_rate,
+SUM(totals.transactionRevenue) / 1000000 as transaction_revenue
 FROM [78667059.ga_sessions_20150103]
 GROUP BY source_medium
 ORDER BY sessions DESC
