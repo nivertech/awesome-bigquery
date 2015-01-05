@@ -1,3 +1,16 @@
+## Marketing
+
+#### Source / Medium
+
+```sql
+SELECT 
+trafficSource.source + ' / ' + trafficSource.medium AS source_medium, count(*) as sessions
+FROM [78667059.ga_sessions_20150103]
+WHERE hits.hitNumber = 1
+GROUP BY source_medium
+ORDER BY sessions DESC
+```
+
 ## Behaviour
 
 #### Add Column To State If Page Is Last Hit
