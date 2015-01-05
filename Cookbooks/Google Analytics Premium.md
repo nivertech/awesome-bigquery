@@ -1,12 +1,14 @@
 ## Marketing
 
-#### Source / Medium
+#### Source / Medium - sessions and bounce rate
 
 ```sql
 SELECT 
-trafficSource.source + ' / ' + trafficSource.medium AS source_medium, count(*) as sessions
+trafficSource.source + ' / ' + trafficSource.medium AS source_medium, 
+count(DISTINCT CONCAT(fullVisitorId, STRING(visitId)), 100000) as sessions,
+SUM(totals.bounces) as bounces,
+100 * SUM(totals.bounces) / count(DISTINCT CONCAT(fullVisitorId, STRING(visitId)), 100000) as bounce_rate
 FROM [78667059.ga_sessions_20150103]
-WHERE hits.hitNumber = 1
 GROUP BY source_medium
 ORDER BY sessions DESC
 ```
