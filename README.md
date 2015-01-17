@@ -31,6 +31,7 @@ A curated list of all the awesome articles, tutorials and video avaiable online 
 ### Examples - Insert Data
 
 - [Streaming data into Google BigQuery - Streak](https://www.youtube.com/watch?v=MTyMirxB-RY)
+- [Api Analytics with BigQuery - Javier Ramirez - teowaki](http://www.slideshare.net/supercoco9/api-analytics-with-bigquery-by-javier-ramirez-from-teowaki)
 
 ### Third Party Tools
 
