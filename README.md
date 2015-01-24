@@ -30,6 +30,8 @@ A curated list of all the awesome articles, tutorials and video avaiable online 
 
 ### Examples - Insert Data
 
+- [Real-time data analysis with Kubernetes, Redis, and BigQuery on Google Cloud Platform](https://cloud.google.com/solutions/real-time/kubernetes-redis-bigquery)
+- [Real-time logs analysis using Fluentd and BigQuery](https://cloud.google.com/solutions/real-time/fluentd-bigquery)
 - [Streaming data into Google BigQuery - Streak](https://www.youtube.com/watch?v=MTyMirxB-RY)
 - [Api Analytics with BigQuery - Javier Ramirez - teowaki](http://www.slideshare.net/supercoco9/api-analytics-with-bigquery-by-javier-ramirez-from-teowaki)
 
